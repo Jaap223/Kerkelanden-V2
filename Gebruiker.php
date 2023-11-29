@@ -27,6 +27,9 @@ class Gebruiker extends Database
             $stmt->bindParam(':user_name', $user_name);
     
             if ($stmt->execute()) {
+               
+
+                $message = "Gegevens opgeslagen, u wordt doorwerwezen naar de volgende pagina.";
                 header("Location: BaseUser.php");
             } else {
                 throw new Exception("Er ging iets fout met het account aanmaken.");
@@ -34,6 +37,7 @@ class Gebruiker extends Database
         } catch (Exception $e) {
             return $e->getMessage();
         }
+        return $message;
     }
 
     public function overzicht_printen()
@@ -105,6 +109,11 @@ if (isset($_POST['klant_registreren'])) {
 
                 <input type="submit" name="klant_registreren" value="klant_registreren">
             </form>
+            <?php
+            if (isset($message)) {
+                echo '<p class="succes-message">'. $message. '</p>';
+            }
+            ?>
             <a href="BaseUser.php">Inloggen</a>
         </section>
 

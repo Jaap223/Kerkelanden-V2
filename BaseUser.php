@@ -48,7 +48,7 @@ class BaseUser extends Database
             echo $e->getMessage();
         }
 
-        echo "Hashed Password from Database: " . $result->wachtwoord . "<br>";
+        echo "Hashed Password from Database: " . $result->Wachtwoord . "<br>";
         echo "Entered Password: " . $wachtwoord . "<br>";
     }
 

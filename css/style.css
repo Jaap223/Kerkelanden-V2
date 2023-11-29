@@ -77,3 +77,8 @@ footer {
 .formR input[type="submit"]:hover {
     background-color: #008080;
 }
+.succes-message{
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
