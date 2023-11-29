@@ -4,21 +4,9 @@
 require_once 'Database.php';
 require_once 'head/header.php';
 //require_once 'Gebruiker.php';
-
-// $gebruiker = new BaseUser();
-
-// if(isset($_POST['inloggen'])){
-//     $gebruiker->inloggen($_POST['user_name'], $_POST['wachtwoord']);
-// }
-
 class BaseUser extends Database
 {
-    private $naam;
-    private $user_name;
-    private $wachtwoord;
-    private $geboorte_datum;
-    private $adres;
-    private $telefoonnummer;
+
     private $db;
 
 
@@ -30,31 +18,41 @@ class BaseUser extends Database
     }
 
 
-    public function inloggen ($user_name, $wachtwoord)
+    public function inloggen($user_name, $wachtwoord)
     {
-      try {
-        $sql = "SELECT * FROM gebruiker WHERE user_name = :user_name";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':user_name', $user_name);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_OBJ);
+        try {
+            $sql = "SELECT * FROM gebruiker WHERE user_name = :user_name";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':user_name', $user_name);
+            $stmt->execute();
 
-        if ($result && password_verify($wachtwoord, $result->wachtwoord)) {
-            session_start();
-            $_SESSION['inloggen'] = true;
-            $_SESSION['user_name'] = $result->user_name;
-            $conn = null;
-            header('Location: index.php');
-      } else {
-        $conn = null;
-        throw new Exception("Combinatie onjuist");
-      }
-    }catch(Exception $e){
-        echo $e->getMessage();
-    }
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+
+            var_dump($result);
+
+            if ($result) {
+           
+                if (property_exists($result, 'Wachtwoord') && password_verify($wachtwoord, $result->Wachtwoord)) {
+                    session_start();
+                    $_SESSION['inloggen'] = true;
+                    $_SESSION['user_name'] = $result->user_name;
+                    header('Location: Index.php');
+                    exit();
+                } else {
+                    throw new Exception("Combinatie onjuist");
+                }
+            } else {
+                throw new Exception("Gebruiker niet gevonden");
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo "Hashed Password from Database: " . $result->wachtwoord . "<br>";
+        echo "Entered Password: " . $wachtwoord . "<br>";
     }
 
-    
+
 
 
 
@@ -64,9 +62,12 @@ class BaseUser extends Database
     public function uitloggen()
     {
     }
+}
 
+$gebruiker = new BaseUser();
 
-
+if (isset($_POST['inloggen'])) {
+    $gebruiker->inloggen($_POST['user_name'], $_POST['wachtwoord']);
 }
 ?>
 
@@ -100,7 +101,7 @@ class BaseUser extends Database
                 <input type="text" name="user_name" id="user_name">
                 <label for="wachtwoord">Wachtwoord</label>
                 <input type="password" name="wachtwoord" id="wachtwoord">
-                <input type="submit" name="inloggen" value="Inloggen">
+                <input type="submit" name="inloggen" value="inloggen">
             </form>
             <a href="Gebruiker.php">Registreren</a>
         </section>
