@@ -18,6 +18,7 @@
         <a href="Login.php">Login</a>
         <a href="Gebruiker.php"> Afspraak maken</a>
         <a href="BeheerA.php">Behandeling inplannen</a>
+        <a href="baseUser.php">gebruiker registreren</a>
     </nav>
 
 

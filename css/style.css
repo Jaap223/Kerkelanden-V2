@@ -1,5 +1,5 @@
 * {
-    font-family: 'Courier New', monospace;
+    font-family: 'Helvetica', 'Arial', sans-serif;
     font-size: 18px;
     margin: 0;
     padding: 0;
@@ -44,3 +44,4 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
