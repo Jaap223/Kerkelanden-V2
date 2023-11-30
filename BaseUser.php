@@ -54,6 +54,11 @@ class BaseUser extends Database
 
     public function uitloggen()
     {
+
+        if (isset($_SESSION['naam'])) {
+            $_SESSION = array();
+            
+        }
     }
 }
 
