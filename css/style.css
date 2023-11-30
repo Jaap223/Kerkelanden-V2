@@ -1,3 +1,4 @@
+
 * {
     font-family: 'Helvetica', 'Arial', sans-serif;
     font-size: 18px;
@@ -45,3 +46,39 @@ footer {
     width: 100%;
 }
 
+.formR {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.formR label,
+.formR input,
+.formR select {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.formR input[type="submit"] {
+    display: block;
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: aqua;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.formR input[type="submit"]:hover {
+    background-color: #008080;
+}
+.succes-message{
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+}
