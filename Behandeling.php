@@ -16,9 +16,42 @@ class behandeling extends database
         $stmt->bindParam(':kosten', $_POST['kosten']);
         $stmt->execute();
 
-        return $stmt->fetchAll();
+        return $stmt->rowCount();
+    }
+
+
+
+    public function update()
+    {
+        $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
+        $stmt->bindParam(':kosten', $_POST['kosten']);
+        $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
+        $stmt->execute();
+        return $stmt->rowCount();
+    }
+
+
+    public function delete()
+    {
+        $sql = "DELETE FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_id', $behandeling_id);
+        $stmt->execute();
+    }
+
+
+    public function bekijken()
+    {
+        $sql = "SELECT * FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_id', $_GET['behandeling_id']);
+        $stmt->execute();
+        return $stmt->fetch();
     }
 }
+
 
 
 
@@ -27,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $behandeling = new Behandeling();
 
     $naam = $_POST['naam'];
-    $behandeling_beschrijving = $_POST['beschrijving'];
+    $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
     $kosten = $_POST['kosten'];
 
-    $resultaat = $behandeling->invoeren($beschrijving, $kosten);
+    $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
 }
 
 ?>
@@ -48,19 +81,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <h1>Toevoegen behandeling</h1>
+
     <?php if (isset($resultaat)) : ?>
         <p><?php echo $resultaat; ?></p>
     <?php endif; ?>
 
     <form method="post">
-        <label for="naam">Naam behandeling</label>
-        <input type="text" name="naam" required>
-        <label for="kosten">Kosten behandeling</label>
-        <input type="number" name="kosten" required>
-        <label for="naam">Naam behandeling</label>
-        <input type="submit" value="invoeren" required>
-
+        <div class="formR">
+            <h1>Toevoegen behandeling</h1>
+            <label for="naam">Naam behandeling</label>
+            <input type="text" name="naam" required>
+            <label for="behandeling_beschrijving">Beschrijving behandeling</label>
+            <input type="text" name="behandeling_beschrijving" required>
+            <label for="kosten">Kosten behandeling</label>
+            <input type="number" name="kosten" required>
+            <input type="submit" value="invoeren" required>
+        </div>
     </form>
 </body>
 
