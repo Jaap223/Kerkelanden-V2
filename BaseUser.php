@@ -52,13 +52,6 @@ class BaseUser extends Database
         echo "Entered Password: " . $wachtwoord . "<br>";
     }
 
-
-
-
-
-
-
-
     public function uitloggen()
     {
     }

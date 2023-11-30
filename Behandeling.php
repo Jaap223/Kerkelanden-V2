@@ -10,6 +10,13 @@ class behandeling extends database
 
     public function invoeren()
     {
+        $sql = "INSERT INTO Behandeling (behandeling_beschrijving, kosten) VALUES (:behandeling_beschrijving, :kosten)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
+        $stmt->bindParam(':kosten', $_POST['kosten']);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 }
 
@@ -17,14 +24,13 @@ class behandeling extends database
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $behandeling = new behandeling();
+    $behandeling = new Behandeling();
 
     $naam = $_POST['naam'];
+    $behandeling_beschrijving = $_POST['beschrijving'];
     $kosten = $_POST['kosten'];
 
-
-    $resultaat = $behandeling->invoeren($naam, $kosten);
+    $resultaat = $behandeling->invoeren($beschrijving, $kosten);
 }
 
 ?>
