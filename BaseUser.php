@@ -28,10 +28,7 @@ class BaseUser extends Database
 
             $result = $stmt->fetch(PDO::FETCH_OBJ);
 
-            var_dump($result);
-
             if ($result) {
-           
                 if (property_exists($result, 'Wachtwoord') && password_verify($wachtwoord, $result->Wachtwoord)) {
                     session_start();
                     $_SESSION['inloggen'] = true;
@@ -55,9 +52,21 @@ class BaseUser extends Database
     public function uitloggen()
     {
 
-        if (isset($_SESSION['naam'])) {
-            $_SESSION = array();
-            
+        if (isset($_SESSION['inloggen'])) {
+
+
+            unset($_SESSION['inloggen']);
+            unset($_SESSION[['user_name']]);
+
+
+            session_destroy();
+
+            header('Location: BaseUser.php');
+            exit();
+        } else {
+
+
+            echo 'User is not logged in.';
         }
     }
 }

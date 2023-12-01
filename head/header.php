@@ -16,7 +16,7 @@
     <nav class="mainNav">
         <a href="Afspraak.php">Afspraak</a>
         <a href="BaseUser.php">Login</a>
-        <a href="Gebruiker.php"> Afspraak maken</a>
+       
         <a href="Behandeling.php">Behandeling inplannen</a>
         <a href="gebruiker.php">gebruiker registreren</a>
     </nav>

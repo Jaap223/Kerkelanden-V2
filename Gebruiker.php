@@ -48,7 +48,6 @@ class Gebruiker extends Database
     {
     }
 }
-
 $reg = new Gebruiker();
 
 if (isset($_POST['klant_registreren'])) {

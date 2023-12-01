@@ -1,10 +1,12 @@
-<?php 
+<?php
 session_start();
 
-if (!isset($_SESSION['naam'])) {
-    header('Location: BaseUser.php');
-    exit();
-};
+
+
+
+
+
+
 
 require_once 'head/header.php';
 require_once 'Database.php';
@@ -25,15 +27,19 @@ require_once 'head/footer.php';
 
 <body>
 
-<?php echo 'Welcome, ' . $_SESSION['user'] . '!'; ?>
-<?php echo '<a href="BaseUser.php">Logout</a>';?>
-
+    <?php echo 'Welcome, ' . $_SESSION['user_name'] . '!'; ?>
+    <?php
+    if (isset($_SESSION['inloggen']) && $_SESSION['inloggen']) {
+    echo '<a href="BaseUser.php">Logout</a>';
+    
+}
+ ?>
 </body>
 <main>
-<section>
-    <article class="info">
+    <section>
+        <article class="info">
 
-    </article>
-</section>
+        </article>
+    </section>
 
 </main>
