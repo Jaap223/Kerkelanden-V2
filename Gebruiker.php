@@ -98,6 +98,7 @@ if (isset($_POST['klant_registreren'])) {
                 <select name="rol" id="rol">
                     <option value="klant">Klant</option>
                     <option value="medewerker">Medewerker</option>
+                    <option value="assistent">Assistent</option>
                 </select>
 
                 <label for="user_name">User name</label>

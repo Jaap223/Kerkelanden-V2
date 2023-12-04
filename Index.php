@@ -3,11 +3,6 @@ session_start();
 
 
 
-
-
-
-
-
 require_once 'head/header.php';
 require_once 'Database.php';
 require_once 'head/footer.php';

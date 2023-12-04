@@ -1,16 +1,13 @@
 <?php
-
+session_start();
 
 require_once 'Database.php';
 require_once 'head/header.php';
-//require_once 'Gebruiker.php';
+// require_once 'Gebruiker.php';
 class BaseUser extends Database
 {
 
     private $db;
-
-
-
 
     public function __construct()
     {
@@ -45,8 +42,8 @@ class BaseUser extends Database
             echo $e->getMessage();
         }
 
-        echo "Hashed Password from Database: " . $result->Wachtwoord . "<br>";
-        echo "Entered Password: " . $wachtwoord . "<br>";
+        // echo "Hashed Password from Database: " . $result->Wachtwoord . "<br>";
+        // echo "Entered Password: " . $wachtwoord . "<br>";
     }
 
     public function uitloggen()

@@ -1,39 +1,77 @@
 <?php
-
-
 require_once 'head/header.php';
 require_once 'Database.php';
-
-
 
 class Afspraak extends database
 {
 
-    public function afspraak_maken()
+    // werkt nog niet
+    public function afspraak_maken($gebruiker, $patient, $datum, $locatie, $status)
     {
-        $sql = "INSERT INTO afspraak(gebruiker,patient,datum,tijd,locatie,`status`) VALUES (?, ?, ? ,? ,?,?)";
+        $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $gebruiker, PDO::PARAM_INT); 
+        $stmt->bindParam(2, $patient, PDO::PARAM_INT);   
+        $stmt->bindParam(3, $datum, PDO::PARAM_STR);
+        $stmt->bindParam(4, $locatie, PDO::PARAM_STR);
+        $stmt->bindParam(5, $status, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount();
     }
 
     public function afspraak_wijzigen()
     {
+        $sql = "UPDATE afspraak SET Gebruiker_id = ?, Patiënt_id = ?, Datum = ? WHERE behandeling_id = ? LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT); 
+        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);   
+        $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
+        $stmt->bindParam(4, $_POST['behandeling_id'], PDO::PARAM_INT); 
+        $stmt->execute();
+        return $stmt->rowCount();
     }
-
 
     public function afspraak_annuleren()
     {
+        $sql = "DELETE FROM afspraak WHERE Gebruiker_id = ? AND Patiënt_id = ? AND Datum = ? LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT); 
+        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);   
+        $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->rowCount();
     }
 
     public function behandeling_toevoegen()
     {
+        $sql = "DELETE FROM behandeling WHERE id =?";
     }
-
 
     public function behandeling_verwijderen()
     {
     }
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $gebruiker = $_POST["gebruiker"];
+    $patient = $_POST["patient"];
+    $datum = $_POST["datum"];
+    $locatie = $_POST["locatie"];
+    $status = $_POST["status"];
 
+    if (empty($gebruiker) || empty($patient) || empty($datum) || empty($locatie) || empty($status)) {
+        echo "Please fill in all fields.";
+    } else {
+        $afspraak = new Afspraak();
+        $result = $afspraak->afspraak_maken($gebruiker, $patient, $datum, $locatie, $status);
+
+        if ($result > 0) {
+            echo "Afspraak gemaakt op $datum";
+        } else {
+            echo "Error creating appointment.";
+        }
+    }
+}
 ?>
 
 
@@ -49,37 +87,27 @@ class Afspraak extends database
 </head>
 
 <body>
-
     <section class="formR">
-        <form method="post">
+        <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <h1>Afspraak Maken</h1>
 
-            <label for="gebruiker">gebruiker</label>
+            <label for="gebruiker">Gebruiker</label>
+            <input type="text" name="gebruiker" required>
 
-            <input type="gebruiker" name="gebruiker" required>
+            <label for="patient">Patient</label>
+            <input type="text" name="patient" required>
 
+            <label for="datum">Datum</label>
+            <input type="date" name="datum" required>
 
-            <label for="patient">patient</label>
+            <label for="locatie">Locatie</label>
+            <input type="text" name="locatie" required>
 
-            <input type="patient" name="patient" required>
-            <label for="datum">datum</label>
-            <input type="datum" name="datum" required>
-            <label for="tijd">Tijd:</label>
+            <label for="status">Status</label>
+            <input type="text" name="status" required>
 
-            <input type="tijd" name="tijd" required>
-
-            <label for="locatie">locatie</label>
-
-            <input type="locatie" name="locatie" required>
-
-            <label for="status">status</label>
-
-            <input for="status" name="status" required>
-
-            <button type="submit" name="submit">Maak Afspraak</button>
-
+            <button type="submit" name="afspraak_maken">Maak Afspraak</button>
         </form>
-
     </section>
 </body>
 
