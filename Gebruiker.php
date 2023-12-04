@@ -42,10 +42,18 @@ class Gebruiker extends Database
 
     public function overzicht_printen()
     {
+        $sql = "SELECT * FROM gebruiker"; 
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        return $stmt;
     }
 
     public function alle_afspraken_overzicht()
     {
+        $sql = "SELECT * FROM afspraak";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        return $stmt;
     }
 }
 $reg = new Gebruiker();
