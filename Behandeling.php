@@ -4,10 +4,9 @@ require_once 'head/header.php';
 require_once 'head/footer.php';
 require_once 'Database.php';
 
+
 class behandeling extends database
 {
-
-
     public function invoeren()
     {
         $message = "";
@@ -56,16 +55,21 @@ class behandeling extends database
 
     public function bekijken()
     {
-        $sql = "SELECT * FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':behandeling_id', $_GET['behandeling_id']);
-        $stmt->execute();
-        return $stmt->fetch();
+        try {
+            $sql = "SELECT * FROM Behandeling WHERE Behandeling_id = :Behandeling_id LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':Behandeling_id', $_GET['Behandeling_id']);
+            $stmt->execute();
+            return $stmt->fetch();
+        } catch (Exception $e) {
+           
+            error_log($e->getMessage(), 0);
+            return false; 
+        }
     }
+
+
 }
-
-
-
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -76,6 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kosten = $_POST['kosten'];
 
     $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $behandeling = new Behandeling();
+    $resultaat = $behandeling->invoeren();
 }
 
 ?>

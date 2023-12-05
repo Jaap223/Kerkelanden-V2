@@ -67,7 +67,7 @@ footer {
     width: 100%;
     margin-top: 20px;
     padding: 10px;
-    background-color: aqua;
+    background-color: rgb(36, 131, 131);
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -81,4 +81,38 @@ footer {
     color: green;
     font-weight: bold;
     margin-top: 10px;
+}
+.overzichtTab {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+}
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+p {
+    text-align: center;
+    color: #333;
 }

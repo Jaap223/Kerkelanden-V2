@@ -11,6 +11,7 @@ class Gebruiker extends Database
 
     public function klant_registreren($naam, $adres, $wachtwoord, $geboortedatum, $tel_nr, $rol, $user_name)
     {
+
         $message = "";
         try {
             $options = ['cost' => 6];
