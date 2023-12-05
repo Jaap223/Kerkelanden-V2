@@ -7,7 +7,4 @@
 </article>
 
 
-
-
-
 </footer>

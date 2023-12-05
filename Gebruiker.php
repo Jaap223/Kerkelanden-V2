@@ -3,7 +3,6 @@ require_once 'Database.php';
 require_once 'head/header.php';
 //require_once 'Gebruiker.php';
 
-
 class Gebruiker extends Database
 {
     public function gebruiker_toevoegen()
@@ -12,10 +11,11 @@ class Gebruiker extends Database
 
     public function klant_registreren($naam, $adres, $wachtwoord, $geboortedatum, $tel_nr, $rol, $user_name)
     {
+        $message = "";
         try {
             $options = ['cost' => 6];
             $passwordCrypt = password_hash($wachtwoord, PASSWORD_BCRYPT, $options);
-    
+
             $sql = "INSERT INTO gebruiker (Naam, Adres, Wachtwoord, Geboortedatum, Tel_nr, Rol, user_name) VALUES (:naam, :adres, :wachtwoord, :geboortedatum, :tel_nr, :rol, :user_name)";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(':naam', $naam);
@@ -25,18 +25,18 @@ class Gebruiker extends Database
             $stmt->bindParam(':tel_nr', $tel_nr);
             $stmt->bindParam(':rol', $rol);
             $stmt->bindParam(':user_name', $user_name);
-    
-            if ($stmt->execute()) {
-               
 
-                $message = "Gegevens opgeslagen, u wordt doorwerwezen naar de volgende pagina.";
-                header("Location: BaseUser.php");
+            if ($stmt->execute()) {
+                $message = "Gegevens opgeslagen, u wordt doorverwezen naar de volgende pagina.";
+                header("Refresh: 3; URL=BaseUser.php");
+              
             } else {
                 throw new Exception("Er ging iets fout met het account aanmaken.");
             }
         } catch (Exception $e) {
             return $e->getMessage();
         }
+
         return $message;
     }
 
@@ -59,7 +59,7 @@ class Gebruiker extends Database
 $reg = new Gebruiker();
 
 if (isset($_POST['klant_registreren'])) {
-    echo $reg->klant_registreren(
+    $message = $reg->klant_registreren(
         $_POST['naam'],
         $_POST['adres'],
         $_POST['wachtwoord'],
@@ -68,6 +68,10 @@ if (isset($_POST['klant_registreren'])) {
         $_POST['rol'],
         $_POST['user_name']
     );
+
+    if (!empty($message)) {
+        echo '<p class="success-message">' . $message . '</p>';
+    }
 }
 
 ?>
@@ -112,16 +116,9 @@ if (isset($_POST['klant_registreren'])) {
                 <label for="user_name">User name</label>
                 <input type="text" name="user_name" id="user_name">
 
-
-           
-
                 <input type="submit" name="klant_registreren" value="klant_registreren">
             </form>
-            <?php
-            if (isset($message)) {
-                echo '<p class="succes-message">'. $message. '</p>';
-            }
-            ?>
+          
             <a href="BaseUser.php">Inloggen</a>
         </section>
 

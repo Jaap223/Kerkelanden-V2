@@ -10,13 +10,25 @@ class behandeling extends database
 
     public function invoeren()
     {
-        $sql = "INSERT INTO Behandeling (behandeling_beschrijving, kosten) VALUES (:behandeling_beschrijving, :kosten)";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
-        $stmt->bindParam(':kosten', $_POST['kosten']);
-        $stmt->execute();
+        $message = "";
 
-        return $stmt->rowCount();
+        try {
+            $sql = "INSERT INTO Behandeling (behandeling_beschrijving, kosten) VALUES (:behandeling_beschrijving, :kosten)";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
+            $stmt->bindParam(':kosten', $_POST['kosten']);
+            $stmt->execute();
+            if ($stmt->execute()) {
+                $message = "Behandeling opgeslagen, u wordt doorverwezen naar de volgende pagina.";
+                header("Refresh: 3; URL=Overzicht.php");
+            } else {
+                throw new Exception("Er ging iets fout met de behandeling aanmaken.");
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return $message;
     }
 
 
@@ -33,7 +45,7 @@ class behandeling extends database
     }
 
 
-    public function delete()
+    public function delete($behandeling_id)
     {
         $sql = "DELETE FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
         $stmt = $this->connect()->prepare($sql);

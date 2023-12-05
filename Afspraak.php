@@ -6,12 +6,12 @@ class Afspraak extends database
 {
 
     // werkt nog niet
-    public function afspraak_maken($gebruiker, $patient, $datum, $locatie, $status)
+    public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
     {
         $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $gebruiker, PDO::PARAM_INT); 
-        $stmt->bindParam(2, $patient, PDO::PARAM_INT);   
+        $stmt->bindParam(1, $gebruikerId, PDO::PARAM_INT);
+        $stmt->bindParam(2, $patientId, PDO::PARAM_INT);
         $stmt->bindParam(3, $datum, PDO::PARAM_STR);
         $stmt->bindParam(4, $locatie, PDO::PARAM_STR);
         $stmt->bindParam(5, $status, PDO::PARAM_STR);
@@ -44,23 +44,34 @@ class Afspraak extends database
 
     public function behandeling_toevoegen()
     {
-        $sql = "DELETE FROM behandeling WHERE id =?";
+        $sql = "INSERT INTO Behandeling (behandeling_beschrijving, kosten) VALUES (:behandeling_beschrijving, :kosten)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
+        $stmt->bindParam(':kosten', $_POST['kosten']);
+        $stmt->execute();
+
+        return $stmt->rowCount();
     }
 
-    public function behandeling_verwijderen()
+    public function behandeling_verwijderen($behandeling_id)
     {
+        $sql = "DELETE FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
+        $stmt->execute();
+
     }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gebruiker = $_POST["gebruiker"];
     $patient = $_POST["patient"];
-    $datum = $_POST["datum"];
+    $datum = $_POST["datum"];	
     $locatie = $_POST["locatie"];
     $status = $_POST["status"];
 
     if (empty($gebruiker) || empty($patient) || empty($datum) || empty($locatie) || empty($status)) {
-        echo "Please fill in all fields.";
+        echo "Vul alle velden in alstublieft"; 
     } else {
         $afspraak = new Afspraak();
         $result = $afspraak->afspraak_maken($gebruiker, $patient, $datum, $locatie, $status);
@@ -68,8 +79,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result > 0) {
             echo "Afspraak gemaakt op $datum";
         } else {
-            echo "Error creating appointment.";
+            echo "Er ging iets fout met het afspraak maken";
         }
+
+        
     }
 }
 ?>
