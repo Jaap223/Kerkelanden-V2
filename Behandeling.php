@@ -105,15 +105,15 @@ class behandeling extends database
 }
 
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     $behandeling = new Behandeling();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $behandeling = new Behandeling();
 
-//     $naam = $_POST['naam'];
-//     $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
-//     $kosten = $_POST['kosten'];
+    $naam = $_POST['naam'];
+    $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
+    $kosten = $_POST['kosten'];
 
-//     $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
-// }
+    $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
+}
 
 ?>
 
