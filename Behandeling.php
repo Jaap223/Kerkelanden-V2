@@ -30,45 +30,75 @@ class behandeling extends database
         return $message;
     }
 
-
-
     public function update()
     {
-        $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
-        $stmt->bindParam(':kosten', $_POST['kosten']);
-        $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
-        $stmt->execute();
-        return $stmt->rowCount();
+        $message = "";
+    
+      
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+               
+                if (isset($_POST['behandeling_beschrijving'], $_POST['kosten'], $_POST['behandeling_id'])) {
+                    $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
+                    $stmt = $this->connect()->prepare($sql);
+                    $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
+                    $stmt->bindParam(':kosten', $_POST['kosten']);
+                    $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
+                    $stmt->execute();
+    
+                  
+                    if ($stmt->rowCount() > 0) {
+                        $message = "Behandeling bijgewerkt, u wordt doorverwezen naar de volgende pagina.";
+                        header("Refresh: 3; URL=Overzicht.php");
+                    } else {
+                        throw new Exception("Er ging iets fout met de behandeling bijwerken.");
+                    }
+                } else {
+                    throw new Exception("Niet alle vereiste velden zijn ingevuld.");
+                }
+            } catch (Exception $e) {
+                return $e->getMessage();
+            }
+        }
+    
+        return $message;
     }
 
 
     public function delete($behandeling_id)
     {
-        $sql = "DELETE FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':behandeling_id', $behandeling_id);
-        $stmt->execute();
+
+
+        if (isset($_POST['action']) && $_POST['action'] === 'delete') {
+            $behandeling_id = $_POST['behandeling_id'];
+
+
+            $sql = "DELETE FROM behandeling WHERE Behandeling_id = :behandeling_id LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':behandeling_id', $behandeling_id);
+            $stmt->execute();
+
+
+
+
+            header("Location: Overzicht.php");
+            exit();
+        }
     }
 
 
     public function bekijken()
     {
         try {
-            $sql = "SELECT * FROM Behandeling WHERE Behandeling_id = :Behandeling_id LIMIT 1";
+            $sql = "SELECT * FROM Behandeling";
             $stmt = $this->connect()->prepare($sql);
-            $stmt->bindParam(':Behandeling_id', $_GET['Behandeling_id']);
             $stmt->execute();
-            return $stmt->fetch();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-           
             error_log($e->getMessage(), 0);
-            return false; 
+            return false;
         }
     }
-
-
 }
 
 

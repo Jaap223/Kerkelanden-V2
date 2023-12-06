@@ -5,7 +5,22 @@ require_once 'Database.php';
 require_once 'Behandeling.php';
 
 $overzicht = new Behandeling();
-$behandeling = $overzicht->bekijken();
+$behandelingen = $overzicht->bekijken();
+
+$verwijderObj = new behandeling();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
+
+    $verwijderObj->delete($_POST['behandeling_id']);
+
+    header("Location: Overzicht.php");
+    exit();
+}
+
+$overzicht = new Behandeling();
+$behandelingen = $overzicht->bekijken();
+
+
 
 ?>
 
@@ -25,23 +40,34 @@ $behandeling = $overzicht->bekijken();
     <div class="overzichtTab">
         <h1>Overzicht Behandelingen</h1>
 
-        <?php if ($behandeling) : ?>
+        <?php if (!empty($behandelingen)) : ?>
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Naam behandeling</th>
                         <th>Beschrijving behandeling</th>
                         <th>Kosten behandeling</th>
+                        <th>verwijder behandeling</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><?= $behandeling['Behandeling_id'] ?></td>
-                        <td><?= $behandeling['naam'] ?></td>
-                        <td><?= $behandeling['behandeling_beschrijving'] ?></td>
-                        <td><?= $behandeling['kosten'] ?></td>
-                    </tr>
+                    <?php foreach ($behandelingen as $behandeling) : ?>
+                        <tr>
+                            <td><?= $behandeling['Behandeling_id'] ?></td>
+                            <td><?= $behandeling['behandeling_beschrijving'] ?></td>
+                            <td><?= $behandeling['kosten'] ?></td>
+                            <td>
+                                <form method="POST" action="">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="behandeling_id" value="<?= $behandeling['Behandeling_id'] ?>">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Weet u zeker dat u deze behandeling wilt verwijderen?')">Verwijder</button>
+
+                                </form>
+
+                            </td>
+
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         <?php else : ?>
