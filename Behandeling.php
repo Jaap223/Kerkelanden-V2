@@ -36,18 +36,18 @@ class behandeling extends database
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if (isset($_POST['behandeling_beschrijving'], $_POST['kosten'], $_POST['behandeling_id'])) {
-                  
+
                     if (!is_numeric($_POST['kosten'])) {
                         throw new Exception("Invalid input for 'kosten'. Please provide a numeric value.");
                     }
-    
+
                     $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
                     $stmt = $this->connect()->prepare($sql);
                     $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
                     $stmt->bindParam(':kosten', $_POST['kosten']);
                     $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
                     $stmt->execute();
-    
+
                     if ($stmt->rowCount() > 0) {
                         $_SESSION['success_message'] = "Behandeling bijgewerkt";
                         header("Location: Overzicht.php");
@@ -105,15 +105,15 @@ class behandeling extends database
 }
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $behandeling = new Behandeling();
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     $behandeling = new Behandeling();
 
-    $naam = $_POST['naam'];
-    $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
-    $kosten = $_POST['kosten'];
+//     $naam = $_POST['naam'];
+//     $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
+//     $kosten = $_POST['kosten'];
 
-    $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
-}
+//     $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
+// }
 
 ?>
 
