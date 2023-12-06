@@ -36,21 +36,22 @@ class behandeling extends database
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if (isset($_POST['behandeling_beschrijving'], $_POST['kosten'], $_POST['behandeling_id'])) {
-
+                    
                     if (!is_numeric($_POST['kosten'])) {
                         throw new Exception("Invalid input for 'kosten'. Please provide a numeric value.");
                     }
-
-                    $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
+    
+                    $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten WHERE behandeling_id = :behandeling_id LIMIT 1";
                     $stmt = $this->connect()->prepare($sql);
                     $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
                     $stmt->bindParam(':kosten', $_POST['kosten']);
                     $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
                     $stmt->execute();
-
+    
                     if ($stmt->rowCount() > 0) {
                         $_SESSION['success_message'] = "Behandeling bijgewerkt";
-                        header("Location: Overzicht.php");
+    
+                        header("Location: SuccessPage.php");
                         exit();
                     } else {
                         throw new Exception("Geen wijzigingen aangebracht aan de behandeling. Mogelijk is het opgegeven ID niet gevonden.");
@@ -60,12 +61,14 @@ class behandeling extends database
                 }
             } catch (Exception $e) {
                 error_log($e->getMessage(), 0);
-                header("Location: error.php?message=" . urlencode($e->getMessage()));
+    
+              
+                header("Location: ErrorPage.php?message=" . urlencode($e->getMessage()));
                 exit();
             }
         }
     }
-
+    
 
 
     public function delete($behandeling_id)

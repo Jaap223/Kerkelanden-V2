@@ -9,20 +9,16 @@ require_once 'Behandeling.php';
 $verwijderObj = new behandeling();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
-
     $verwijderObj->delete($_POST['behandeling_id']);
-
     header("Location: Overzicht.php");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
     $behandeling = new Behandeling();
-
     $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
     $kosten = $_POST['kosten'];
     $behandeling_id = $_POST['behandeling_id'];
-
     $resultaat = $behandeling->update($behandeling_beschrijving, $kosten, $behandeling_id);
 }
 
@@ -46,7 +42,7 @@ $behandelingen = $overzicht->bekijken();
 
 <body>
 
-    <div class="overzichtTab">
+<div class="overzichtTab">
         <h1>Overzicht Behandelingen</h1>
 
         <?php if (!empty($behandelingen)) : ?>
@@ -70,11 +66,8 @@ $behandelingen = $overzicht->bekijken();
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="behandeling_id" value="<?= $behandeling['Behandeling_id'] ?>">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Weet u zeker dat u deze behandeling wilt verwijderen?')">Verwijder</button>
-
                                 </form>
-
                             </td>
-
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
