@@ -17,6 +17,7 @@
         <a href="Afspraak.php">Afspraak</a>
         <a href="BaseUser.php">Login</a>
         <a href="Overzicht.php">Overzicht</a>
+        <a href="OmgevingKlant.php">Omgeving klant</a>
         <a href="Behandeling.php">Behandeling inplannen</a>
         <a href="gebruiker.php">gebruiker registreren</a>
     </nav>

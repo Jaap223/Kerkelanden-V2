@@ -19,7 +19,7 @@ class behandeling extends database
             $stmt->execute();
             if ($stmt->execute()) {
                 $message = "Behandeling opgeslagen, u wordt doorverwezen naar de volgende pagina.";
-                header("Refresh: 3; URL=Overzicht.php");
+                header("Refresh: 3; URL=OmgevingKlant.php");
             } else {
                 throw new Exception("Er ging iets fout met de behandeling aanmaken.");
             }
@@ -87,7 +87,7 @@ class behandeling extends database
 
 
 
-            header("Location: Overzicht.php");
+            header("Location: OmgevingKlant.php");
             exit();
         }
     }
