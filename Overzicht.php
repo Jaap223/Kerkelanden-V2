@@ -4,8 +4,7 @@ require_once 'head/header.php';
 require_once 'Database.php';
 require_once 'Behandeling.php';
 
-$overzicht = new Behandeling();
-$behandelingen = $overzicht->bekijken();
+
 
 $verwijderObj = new behandeling();
 
@@ -15,6 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
     header("Location: Overzicht.php");
     exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
+    $behandeling = new Behandeling();
+
+    $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
+    $kosten = $_POST['kosten'];
+    $behandeling_id = $_POST['behandeling_id'];
+
+    $resultaat = $behandeling->update($behandeling_beschrijving, $kosten, $behandeling_id);
 }
 
 $overzicht = new Behandeling();
