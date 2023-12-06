@@ -117,3 +117,6 @@ p {
     color: #333;
 }
 
+.btn btn-danger{
+    background-color: red;
+}

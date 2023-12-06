@@ -27,17 +27,15 @@ class behandeling extends database
             return $e->getMessage();
         }
 
+
+
         return $message;
     }
 
     public function update()
     {
-        $message = "";
-    
-      
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-               
                 if (isset($_POST['behandeling_beschrijving'], $_POST['kosten'], $_POST['behandeling_id'])) {
                     $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten  WHERE behandeling_id = :behandeling_id LIMIT 1";
                     $stmt = $this->connect()->prepare($sql);
@@ -45,11 +43,13 @@ class behandeling extends database
                     $stmt->bindParam(':kosten', $_POST['kosten']);
                     $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
                     $stmt->execute();
-    
-                  
+
                     if ($stmt->rowCount() > 0) {
-                        $message = "Behandeling bijgewerkt, u wordt doorverwezen naar de volgende pagina.";
-                        header("Refresh: 3; URL=Overzicht.php");
+
+                        $_SESSION['success_message'] = "Behandeling bijgewerkt";
+
+                        header("Location: Overzicht.php");
+                        exit();
                     } else {
                         throw new Exception("Er ging iets fout met de behandeling bijwerken.");
                     }
@@ -57,12 +57,15 @@ class behandeling extends database
                     throw new Exception("Niet alle vereiste velden zijn ingevuld.");
                 }
             } catch (Exception $e) {
-                return $e->getMessage();
+
+                error_log($e->getMessage(), 0);
+
+                header("Location: error.php");
+                exit();
             }
         }
-    
-        return $message;
     }
+
 
 
     public function delete($behandeling_id)

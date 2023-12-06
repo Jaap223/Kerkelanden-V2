@@ -1,4 +1,5 @@
 <?php
+
 require_once 'head/header.php';
 require_once 'Database.php';
 
@@ -8,6 +9,13 @@ class Afspraak extends database
     // werkt nog niet
     public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
     {
+        session_start();
+        if(!isset($_SESSION['Gebruiker_id'])){
+
+            return false;
+
+        }
+
         $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(1, $gebruikerId, PDO::PARAM_INT);
@@ -80,9 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Afspraak gemaakt op $datum";
         } else {
             echo "Er ging iets fout met het afspraak maken";
-        }
-
-        
+        }   
     }
 }
 ?>
