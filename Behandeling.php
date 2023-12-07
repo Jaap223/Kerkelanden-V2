@@ -36,21 +36,21 @@ class behandeling extends database
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 if (isset($_POST['behandeling_beschrijving'], $_POST['kosten'], $_POST['behandeling_id'])) {
-                    
+
                     if (!is_numeric($_POST['kosten'])) {
                         throw new Exception("Invalid input for 'kosten'. Please provide a numeric value.");
                     }
-    
+
                     $sql = "UPDATE behandeling SET behandeling_beschrijving = :behandeling_beschrijving, kosten = :kosten WHERE behandeling_id = :behandeling_id LIMIT 1";
                     $stmt = $this->connect()->prepare($sql);
                     $stmt->bindParam(':behandeling_beschrijving', $_POST['behandeling_beschrijving']);
                     $stmt->bindParam(':kosten', $_POST['kosten']);
                     $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
                     $stmt->execute();
-    
+
                     if ($stmt->rowCount() > 0) {
                         $_SESSION['success_message'] = "Behandeling bijgewerkt";
-    
+
                         header("Location: SuccessPage.php");
                         exit();
                     } else {
@@ -61,14 +61,14 @@ class behandeling extends database
                 }
             } catch (Exception $e) {
                 error_log($e->getMessage(), 0);
-    
-              
+
+
                 header("Location: ErrorPage.php?message=" . urlencode($e->getMessage()));
                 exit();
             }
         }
     }
-    
+
 
 
     public function delete($behandeling_id)
@@ -106,16 +106,18 @@ class behandeling extends database
         }
     }
 }
-
-
+$behandeling = new behandeling();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $behandeling = new Behandeling();
-
-    $naam = $_POST['naam'];
-    $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
-    $kosten = $_POST['kosten'];
-
-    $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
+    if (isset($_POST['invoeren'])) {
+       
+        $naam = $_POST['naam'];
+        $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
+        $kosten = $_POST['kosten'];
+        $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
+    } elseif (isset($_POST['update'])) {
+        
+        $resultaat = $behandeling->update();
+    }
 }
 
 ?>
@@ -139,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="post">
-        <div class="formR">
+        <div class="formR" action="">
             <h1>Toevoegen behandeling</h1>
             <label for="naam">Naam behandeling</label>
             <input type="text" name="naam" required>
@@ -147,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="behandeling_beschrijving" required>
             <label for="kosten">Kosten behandeling</label>
             <input type="number" name="kosten" required>
-            <input type="submit" value="invoeren" required>
+            <input type="submit" name="invoeren" value="invoeren" required>
         </div>
     </form>
 
@@ -157,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form method="post">
-        <div class="formR">
+        <div class="formR1" action="">
             <label for="behandeling_id">Selecteer behandeling voor update:</label>
             <select name="behandeling_id" required>
                 <?php foreach ($behandelingen as $behandeling) : ?>
@@ -169,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" name="behandeling_beschrijving" required>
             <label for="kosten">Nieuwe kosten behandeling</label>
             <input type="number" name="kosten" required>
-            <input type="submit" value="Bijwerken">
+            <input type="submit" name="update" value="Bijwerken">
         </div>
     </form>
 </body>

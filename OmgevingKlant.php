@@ -10,7 +10,7 @@ $verwijderObj = new behandeling();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $verwijderObj->delete($_POST['behandeling_id']);
-    header("Location: OmgevingKlant.php");
+   // header("Location: OmgevingKlant.php");
     exit();
 }
 

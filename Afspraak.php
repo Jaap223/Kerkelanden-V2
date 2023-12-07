@@ -1,40 +1,51 @@
 <?php
 
+
+
+
 require_once 'head/header.php';
 require_once 'Database.php';
 
 class Afspraak extends database
 {
 
-    // werkt nog niet
+  
     public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
     {
         session_start();
-        if(!isset($_SESSION['Gebruiker_id'])){
-
+        if (!isset($_SESSION['Gebruiker_id'])) {
             return false;
-
         }
 
-        $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $gebruikerId, PDO::PARAM_INT);
-        $stmt->bindParam(2, $patientId, PDO::PARAM_INT);
-        $stmt->bindParam(3, $datum, PDO::PARAM_STR);
-        $stmt->bindParam(4, $locatie, PDO::PARAM_STR);
-        $stmt->bindParam(5, $status, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->rowCount();
+        try {
+            $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->connect()->prepare($sql);
+
+            $stmt->bindParam(1, $gebruikerId, PDO::PARAM_INT);
+            $stmt->bindParam(2, $patientId, PDO::PARAM_INT);
+            $stmt->bindParam(3, $datum, PDO::PARAM_STR);
+            $stmt->bindParam(4, $locatie, PDO::PARAM_STR);
+            $stmt->bindParam(5, $status, PDO::PARAM_STR);
+
+            $stmt->execute();
+            $rowCount = $stmt->rowCount();
+
+            return $rowCount;
+        } catch (PDOException $e) {
+          
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
 
     public function afspraak_wijzigen()
     {
         $sql = "UPDATE afspraak SET Gebruiker_id = ?, Patiënt_id = ?, Datum = ? WHERE behandeling_id = ? LIMIT 1";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT); 
-        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);   
+        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT);
+        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);
         $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
-        $stmt->bindParam(4, $_POST['behandeling_id'], PDO::PARAM_INT); 
+        $stmt->bindParam(4, $_POST['behandeling_id'], PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->rowCount();
     }
@@ -43,8 +54,8 @@ class Afspraak extends database
     {
         $sql = "DELETE FROM afspraak WHERE Gebruiker_id = ? AND Patiënt_id = ? AND Datum = ? LIMIT 1";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT); 
-        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);   
+        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT);
+        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);
         $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->rowCount();
@@ -67,28 +78,28 @@ class Afspraak extends database
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
         $stmt->execute();
-
     }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $gebruiker = $_POST["gebruiker"];
-    $patient = $_POST["patient"];
-    $datum = $_POST["datum"];	
+    $gebruikerId = $_POST["Gebruiker_id"];
+    $patientId = $_POST["Patiënt_id"];
+    $datum = $_POST["datum"];
     $locatie = $_POST["locatie"];
     $status = $_POST["status"];
 
-    if (empty($gebruiker) || empty($patient) || empty($datum) || empty($locatie) || empty($status)) {
-        echo "Vul alle velden in alstublieft"; 
+    if (empty($gebruikerId) || empty($patientId) || empty($datum) || empty($locatie) || empty($status)) {
+        echo "Vul alle velden in alstublieft";
     } else {
         $afspraak = new Afspraak();
-        $result = $afspraak->afspraak_maken($gebruiker, $patient, $datum, $locatie, $status);
+        $result = $afspraak->afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status);
 
         if ($result > 0) {
             echo "Afspraak gemaakt op $datum";
+            
         } else {
             echo "Er ging iets fout met het afspraak maken";
-        }   
+        }
     }
 }
 ?>
@@ -106,15 +117,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <section class="formR">
+<section class="formR">
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <h1>Afspraak Maken</h1>
 
             <label for="gebruiker">Gebruiker</label>
-            <input type="text" name="gebruiker" required>
+            <input type="text" name="Gebruiker_id" required>
 
-            <label for="patient">Patient</label>
-            <input type="text" name="patient" required>
+            <label for="patient">Patiënt</label>
+            <input type="text" name="Patiënt_id" required>
 
             <label for="datum">Datum</label>
             <input type="date" name="datum" required>
