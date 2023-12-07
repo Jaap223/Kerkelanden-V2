@@ -63,7 +63,7 @@ class behandeling extends database
                 error_log($e->getMessage(), 0);
 
 
-                header("Location: ErrorPage.php?message=" . urlencode($e->getMessage()));
+                 header("Location: OmgevingKlant.php");
                 exit();
             }
         }
@@ -158,8 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p><?php echo $resultaat; ?></p>
     <?php endif; ?>
 
-    <form method="post">
-        <div class="formR1" action="">
+    <form method="post" action="">
+        <div class="formR">
             <label for="behandeling_id">Selecteer behandeling voor update:</label>
             <select name="behandeling_id" required>
                 <?php foreach ($behandelingen as $behandeling) : ?>

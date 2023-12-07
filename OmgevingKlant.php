@@ -27,6 +27,7 @@ $behandelingen = $overzicht->bekijken();
 
 
 
+
 class omgevingKlant extends Database{
 
 
@@ -72,6 +73,11 @@ class omgevingKlant extends Database{
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="behandeling_id" value="<?= $behandeling['Behandeling_id'] ?>">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Weet u zeker dat u deze behandeling wilt verwijderen?')">Verwijder</button>
+                                </form>
+                                <form method="POST" action="">
+                                    <input type="hidden" name="action" value="update">
+                                    <input type="hidden" name="behandeling_id" value="<?= $behandeling['Behandeling_id'] ?>">                                    
+                                    <button type="submit" class="btn btn-update" onclick="return confirm('Weet u zeker dat u deze behandeling wilt wijzigen?')">Wijzig</button>
                                 </form>
                             </td>
                         </tr>
