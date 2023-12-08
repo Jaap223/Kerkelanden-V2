@@ -12,11 +12,12 @@ class Afspraak extends database
   
     public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
     {
+        echo $gebruikerId, $patientId, $datum, $locatie, $status;
         session_start();
-        if (!isset($_SESSION['Gebruiker_id'])) {
-            return false;
-        }
-
+        // if (!isset($_SESSION['Gebruiker_id'])) {
+        //     return false;
+        // }
+        echo 'hier';
         try {
             $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
             $stmt = $this->connect()->prepare($sql);
@@ -82,8 +83,9 @@ class Afspraak extends database
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    //print_r($_POST);
     $gebruikerId = $_POST["Gebruiker_id"];
-    $patientId = $_POST["Patiënt_id"];
+    $patientId = $_POST["Patient_id"];
     $datum = $_POST["datum"];
     $locatie = $_POST["locatie"];
     $status = $_POST["status"];
@@ -92,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Vul alle velden in alstublieft";
     } else {
         $afspraak = new Afspraak();
+        // print_r($_POST);
         $result = $afspraak->afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status);
 
         if ($result > 0) {
@@ -122,10 +125,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <h1>Afspraak Maken</h1>
 
             <label for="gebruiker">Gebruiker</label>
-            <input type="text" name="Gebruiker_id" required>
+            <input type="text" name="Gebruiker_id" >
 
             <label for="patient">Patiënt</label>
-            <input type="text" name="Patiënt_id" required>
+            <input type="text" name="Patient_id" >
 
             <label for="datum">Datum</label>
             <input type="date" name="datum" required>
