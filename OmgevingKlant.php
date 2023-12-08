@@ -28,6 +28,8 @@ $behandelingen = $overzicht->bekijken();
 
 
 
+
+
 class omgevingKlant extends Database{
 
 

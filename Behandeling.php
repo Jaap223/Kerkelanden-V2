@@ -63,7 +63,7 @@ class behandeling extends database
                 error_log($e->getMessage(), 0);
 
 
-                 header("Location: OmgevingKlant.php");
+                header("Location: OmgevingKlant.php");
                 exit();
             }
         }
@@ -106,16 +106,17 @@ class behandeling extends database
         }
     }
 }
+
 $behandeling = new behandeling();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['invoeren'])) {
-       
+
         $naam = $_POST['naam'];
         $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
         $kosten = $_POST['kosten'];
         $resultaat = $behandeling->invoeren($behandeling_beschrijving, $kosten);
     } elseif (isset($_POST['update'])) {
-        
+
         $resultaat = $behandeling->update();
     }
 }
@@ -157,7 +158,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if (isset($resultaat)) : ?>
         <p><?php echo $resultaat; ?></p>
     <?php endif; ?>
+    <?php 
+    $behandelingen = $behandeling->bekijken();
 
+    ?>
     <form method="post" action="">
         <div class="formR">
             <label for="behandeling_id">Selecteer behandeling voor update:</label>

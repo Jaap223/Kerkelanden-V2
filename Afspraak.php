@@ -1,7 +1,7 @@
 <?php
 
 
-
+session_start();
 
 require_once 'head/header.php';
 require_once 'Database.php';
@@ -9,7 +9,7 @@ require_once 'Database.php';
 class Afspraak extends database
 {
 
-  
+
     public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
     {
         echo $gebruikerId, $patientId, $datum, $locatie, $status;
@@ -33,7 +33,7 @@ class Afspraak extends database
 
             return $rowCount;
         } catch (PDOException $e) {
-          
+
             echo "Error: " . $e->getMessage();
             return false;
         }
@@ -81,8 +81,23 @@ class Afspraak extends database
         $stmt->execute();
     }
 }
+$user_name = $_SESSION['user_name'];
+$conn = new PDO("mysql:host=localhost;dbname=kerkelanden", "root", "");
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$sql = "SELECT * FROM gebruiker WHERE user_name = :user_name";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_name', $user_name);
+$stmt->execute();
+
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($result['Rol'] != 'assistent') {
+    header("location: BaseUser.php");
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     //print_r($_POST);
     $gebruikerId = $_POST["Gebruiker_id"];
     $patientId = $_POST["Patient_id"];
@@ -99,7 +114,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($result > 0) {
             echo "Afspraak gemaakt op $datum";
-            
         } else {
             echo "Er ging iets fout met het afspraak maken";
         }
@@ -120,15 +134,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-<section class="formR">
+    <section class="formR">
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <h1>Afspraak Maken</h1>
 
             <label for="gebruiker">Gebruiker</label>
-            <input type="text" name="Gebruiker_id" >
+            <input type="text" name="Gebruiker_id">
 
             <label for="patient">Patiënt</label>
-            <input type="text" name="Patient_id" >
+            <input type="text" name="Patient_id">
 
             <label for="datum">Datum</label>
             <input type="date" name="datum" required>

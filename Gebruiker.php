@@ -49,6 +49,7 @@ class Gebruiker extends Database
         return $stmt;
     }
 
+    
     public function alle_afspraken_overzicht()
     {
         $sql = "SELECT * FROM afspraak";
