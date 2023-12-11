@@ -30,7 +30,6 @@ class Gebruiker extends Database
             if ($stmt->execute()) {
                 $message = "Gegevens opgeslagen, u wordt doorverwezen naar de volgende pagina.";
                 header("Refresh: 3; URL=BaseUser.php");
-              
             } else {
                 throw new Exception("Er ging iets fout met het account aanmaken.");
             }
@@ -43,13 +42,15 @@ class Gebruiker extends Database
 
     public function overzicht_printen()
     {
-        $sql = "SELECT * FROM gebruiker"; 
+        $sql = "SELECT * FROM gebruiker WHERE afspraak_datum BETWEEN :startDatum";
         $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(':startDatum', $startDatum);
+        //$stmt->bindParam(':eindDatum', $eindDatum);
         $stmt->execute();
         return $stmt;
     }
 
-    
+
     public function alle_afspraken_overzicht()
     {
         $sql = "SELECT * FROM afspraak";
@@ -58,6 +59,11 @@ class Gebruiker extends Database
         return $stmt;
     }
 }
+
+
+// Klant heeft geen toegang tot registeren, dit moet de assitent uitvoeren.
+
+
 $reg = new Gebruiker();
 
 if (isset($_POST['klant_registreren'])) {
@@ -75,6 +81,15 @@ if (isset($_POST['klant_registreren'])) {
         echo '<p class="success-message">' . $message . '</p>';
     }
 }
+
+
+
+
+// if ($result['Rol'] != 'Klant') {
+//     header("location: BaseUser.php");
+//     exit();
+// }
+
 
 ?>
 <!DOCTYPE html>
@@ -95,7 +110,7 @@ if (isset($_POST['klant_registreren'])) {
             <form method="post">
                 <label for="naam">Naam</label>
                 <input type="text" name="naam" id="naam">
-                
+
                 <label for="adres">Adres</label>
                 <input type="text" name="adres" id="adres">
 
@@ -120,7 +135,7 @@ if (isset($_POST['klant_registreren'])) {
 
                 <input type="submit" name="klant_registreren" value="klant_registreren">
             </form>
-          
+
             <a href="BaseUser.php">Inloggen</a>
         </section>
 

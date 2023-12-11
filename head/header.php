@@ -14,7 +14,7 @@
 <body>
 
     <nav class="mainNav">
-        <a href="Afspraak.php">Afspraak</a>
+        <a href="Afspraak.php">Agenda</a>
         <a href="BaseUser.php">Login</a>
         <a href="Overzicht.php">Overzicht</a>
         <a href="OmgevingKlant.php">Omgeving klant</a>

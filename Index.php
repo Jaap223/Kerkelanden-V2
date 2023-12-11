@@ -25,10 +25,26 @@ require_once 'head/footer.php';
     <?php echo 'Welcome, ' . $_SESSION['user_name'] . '!'; ?>
     <?php
     if (isset($_SESSION['inloggen']) && $_SESSION['inloggen']) {
-    echo '<a href="BaseUser.php">Logout</a>';
-    
-}
- ?>
+        echo '<a href="BaseUser.php">Logout</a>';
+    }
+    ?>
+
+
+
+    <div class="welkom">
+
+
+        <h1>Welkom op Kerkelanden!</h1>
+
+        <p>Over ons:
+            Tandartspraktijk Kerkelanden staat bekend om hoogwaardige tandheelkundige zorg en persoonlijke aandacht voor elke patiënt. Onze toegewijde professionals streven ernaar om een comfortabele en vriendelijke omgeving te bieden, waarin uw tandgezondheid centraal staat.</p>
+
+
+
+
+    </div>
+
+
 </body>
 <main>
     <section>

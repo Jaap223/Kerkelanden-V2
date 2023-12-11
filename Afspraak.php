@@ -8,16 +8,8 @@ require_once 'Database.php';
 
 class Afspraak extends database
 {
-
-
     public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
-    {
-        echo $gebruikerId, $patientId, $datum, $locatie, $status;
-        session_start();
-        // if (!isset($_SESSION['Gebruiker_id'])) {
-        //     return false;
-        // }
-        echo 'hier';
+    {           
         try {
             $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
             $stmt = $this->connect()->prepare($sql);
@@ -37,6 +29,7 @@ class Afspraak extends database
             echo "Error: " . $e->getMessage();
             return false;
         }
+
     }
 
     public function afspraak_wijzigen()
@@ -81,6 +74,8 @@ class Afspraak extends database
         $stmt->execute();
     }
 }
+
+
 $user_name = $_SESSION['user_name'];
 $conn = new PDO("mysql:host=localhost;dbname=kerkelanden", "root", "");
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -95,6 +90,8 @@ if ($result['Rol'] != 'assistent') {
     header("location: BaseUser.php");
     exit();
 }
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -117,7 +114,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             echo "Er ging iets fout met het afspraak maken";
         }
+
     }
+
 }
 ?>
 

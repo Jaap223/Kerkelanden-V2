@@ -3,6 +3,7 @@ CREATE TABLE Locatie (
     Adres VARCHAR(255),
     Tel_nr INT
 );
+
  
 CREATE TABLE Gebruiker (
     Gebruiker_id INT PRIMARY KEY AUTO_INCREMENT,

@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once 'head/header.php';
 require_once 'head/footer.php';
@@ -19,7 +20,8 @@ class behandeling extends database
             $stmt->execute();
             if ($stmt->execute()) {
                 $message = "Behandeling opgeslagen, u wordt doorverwezen naar de volgende pagina.";
-                header("Refresh: 3; URL=OmgevingKlant.php");
+
+                header("Refresh: 3; URL=Overzicht.php");
             } else {
                 throw new Exception("Er ging iets fout met de behandeling aanmaken.");
             }
@@ -31,6 +33,7 @@ class behandeling extends database
 
         return $message;
     }
+
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,7 +54,7 @@ class behandeling extends database
                     if ($stmt->rowCount() > 0) {
                         $_SESSION['success_message'] = "Behandeling bijgewerkt";
 
-                        header("Location: SuccessPage.php");
+                        header("Location: Succes.php");
                         exit();
                     } else {
                         throw new Exception("Geen wijzigingen aangebracht aan de behandeling. Mogelijk is het opgegeven ID niet gevonden.");
@@ -73,8 +76,6 @@ class behandeling extends database
 
     public function delete($behandeling_id)
     {
-
-
         if (isset($_POST['action']) && $_POST['action'] === 'delete') {
             $behandeling_id = $_POST['behandeling_id'];
 
@@ -83,9 +84,6 @@ class behandeling extends database
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(':behandeling_id', $behandeling_id);
             $stmt->execute();
-
-
-
 
             header("Location: OmgevingKlant.php");
             exit();
@@ -106,6 +104,25 @@ class behandeling extends database
         }
     }
 }
+
+$user_name = $_SESSION['user_name'];
+
+$conn = new PDO("mysql:host=localhost;dbname=kerkelanden", "root", "");
+$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$sql = "SELECT * FROM gebruiker WHERE user_name = :user_name";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(':user_name', $user_name);
+$stmt->execute();
+
+$result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// checkt of de gebruiker geen assistent is, als de gebruiker een medewerker of klant is heeft hij geen toegagn tot de app 
+if ($result['Rol'] != 'assistent') {
+  header("Location: BaseUser.php");
+  exit();
+}
+
 
 $behandeling = new behandeling();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -158,10 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php if (isset($resultaat)) : ?>
         <p><?php echo $resultaat; ?></p>
     <?php endif; ?>
-    <?php 
+    <?php
     $behandelingen = $behandeling->bekijken();
 
     ?>
+
     <form method="post" action="">
         <div class="formR">
             <label for="behandeling_id">Selecteer behandeling voor update:</label>

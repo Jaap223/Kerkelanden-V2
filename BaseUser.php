@@ -41,9 +41,7 @@ class BaseUser extends Database
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-
-        // echo "Hashed Password from Database: " . $result->Wachtwoord . "<br>";
-        // echo "Entered Password: " . $wachtwoord . "<br>";
+      
     }
 
     public function uitloggen()
