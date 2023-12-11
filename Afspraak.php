@@ -8,17 +8,18 @@ require_once 'Database.php';
 
 class Afspraak extends database
 {
-    public function afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status)
-    {           
+    public function afspraak_maken($gebruikerId, $patientId, $tijd, $datum, $locatie, $status)
+    {
         try {
-            $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum, Locatie_id, status) VALUES (?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO afspraak(Gebruiker_id, Patiënt_id, Datum , Tijd,  Locatie_id, status) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $this->connect()->prepare($sql);
 
             $stmt->bindParam(1, $gebruikerId, PDO::PARAM_INT);
             $stmt->bindParam(2, $patientId, PDO::PARAM_INT);
             $stmt->bindParam(3, $datum, PDO::PARAM_STR);
-            $stmt->bindParam(4, $locatie, PDO::PARAM_STR);
-            $stmt->bindParam(5, $status, PDO::PARAM_STR);
+            $stmt->bindParam(4, $tijd, PDO::PARAM_STR);
+            $stmt->bindParam(5, $locatie, PDO::PARAM_STR);
+            $stmt->bindParam(6, $status, PDO::PARAM_STR);
 
             $stmt->execute();
             $rowCount = $stmt->rowCount();
@@ -29,7 +30,6 @@ class Afspraak extends database
             echo "Error: " . $e->getMessage();
             return false;
         }
-
     }
 
     public function afspraak_wijzigen()
@@ -95,28 +95,27 @@ if ($result['Rol'] != 'assistent') {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    //print_r($_POST);
+    print_r($_POST);
     $gebruikerId = $_POST["Gebruiker_id"];
     $patientId = $_POST["Patient_id"];
     $datum = $_POST["datum"];
+    $tijd = $_POST["tijd"];
     $locatie = $_POST["locatie"];
     $status = $_POST["status"];
 
-    if (empty($gebruikerId) || empty($patientId) || empty($datum) || empty($locatie) || empty($status)) {
+    if (empty($gebruikerId) || empty($patientId) || empty($tijd) || empty($datum) || empty($locatie) || empty($status)) {
         echo "Vul alle velden in alstublieft";
     } else {
         $afspraak = new Afspraak();
         // print_r($_POST);
-        $result = $afspraak->afspraak_maken($gebruikerId, $patientId, $datum, $locatie, $status);
+        $result = $afspraak->afspraak_maken($gebruikerId, $patientId, $tijd, $datum, $locatie, $status);
 
         if ($result > 0) {
             echo "Afspraak gemaakt op $datum";
         } else {
             echo "Er ging iets fout met het afspraak maken";
         }
-
     }
-
 }
 ?>
 
@@ -142,6 +141,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <label for="patient">Patiënt</label>
             <input type="text" name="Patient_id">
+
+            <label for="tijd">Tijd</label>
+            <input type="time" name="tijd" required>
 
             <label for="datum">Datum</label>
             <input type="date" name="datum" required>

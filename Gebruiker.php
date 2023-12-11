@@ -7,6 +7,7 @@ class Gebruiker extends Database
 {
     public function gebruiker_toevoegen()
     {
+        
     }
 
     public function klant_registreren($naam, $adres, $wachtwoord, $geboortedatum, $tel_nr, $rol, $user_name)
@@ -85,10 +86,7 @@ if (isset($_POST['klant_registreren'])) {
 
 
 
-// if ($result['Rol'] != 'Klant') {
-//     header("location: BaseUser.php");
-//     exit();
-// }
+
 
 
 ?>

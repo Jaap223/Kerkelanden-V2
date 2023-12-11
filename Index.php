@@ -40,8 +40,6 @@ require_once 'head/footer.php';
             Tandartspraktijk Kerkelanden staat bekend om hoogwaardige tandheelkundige zorg en persoonlijke aandacht voor elke patiënt. Onze toegewijde professionals streven ernaar om een comfortabele en vriendelijke omgeving te bieden, waarin uw tandgezondheid centraal staat.</p>
 
 
-
-
     </div>
 
 
