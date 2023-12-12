@@ -88,7 +88,6 @@ class omgevingKlant extends Database{
         <?php else : ?>
             <p>Geen behandelingen gevonden.</p>
         <?php endif; ?>
-
     </div>
 
 </body>

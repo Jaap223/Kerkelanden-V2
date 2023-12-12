@@ -6,7 +6,6 @@ require_once 'head/header.php';
 // require_once 'Gebruiker.php';
 class BaseUser extends Database
 {
-
     private $db;
 
     public function __construct()
