@@ -45,7 +45,7 @@ CREATE TABLE Afspraak (
     FOREIGN KEY (Patiënt_id) REFERENCES Patiënt(Patiënt_id),
     FOREIGN KEY (Locatie_id) REFERENCES Locatie(locatie_id)
 );
- dddd
+ 
 CREATE TABLE Factuur (
     Factuur_nr INT PRIMARY KEY AUTO_INCREMENT,
     Bedrag DOUBLE,
