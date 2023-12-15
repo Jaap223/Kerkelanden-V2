@@ -2,6 +2,7 @@
 session_start();
 require_once 'head/header.php';
 require_once 'Database.php';
+require_once 'fpdf.php';
 
 $user_name = $_SESSION['user_name'];
 
@@ -15,13 +16,16 @@ $stmt->execute();
 
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// checkt of de gebruiker geen medewerker is, als de gebruiker een medewerker of klant is heeft hij geen toegang tot de app 
-if ($result['Rol'] != 'medewerker') {
-    header("Location: BaseUser.php");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
+  
+    $pdf = new FPDF();
+    $pdf->AddPage();
+    $pdf->SetFont('Arial', 'B', 16);
+    $pdf->Cell(40, 10, 'Hello World!');
+    $pdf->Output();
     exit();
 }
-
-
 
 ?>
 
@@ -39,14 +43,18 @@ if ($result['Rol'] != 'medewerker') {
 <body>
 
     <div class="formR">
-        <h1>Overzicht Printen </h1>
+        <h1>Overzicht Printen</h1>
 
-        <?php
+        <form action="" method="post">
+
+            <label for="dateRange">Select Date Range:</label>
+            <input type="date" id="dateRange" name="dateRange" required>
 
 
-
-
-        ?>
+            <button type="submit">Generate PDF</button>
+        </form>
+        =
+        <div id="printMessage"></div>
 
     </div>
 

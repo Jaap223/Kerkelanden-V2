@@ -23,7 +23,7 @@ class BaseUser extends Database
             $stmt->execute();
 
             $result = $stmt->fetch(PDO::FETCH_OBJ);
-
+            
             if ($result) {
                 if (property_exists($result, 'Wachtwoord') && password_verify($wachtwoord, $result->Wachtwoord)) {
                     session_start();
@@ -37,6 +37,7 @@ class BaseUser extends Database
             } else {
                 throw new Exception("Gebruiker niet gevonden");
             }
+            
         } catch (Exception $e) {
             echo $e->getMessage();
         }
