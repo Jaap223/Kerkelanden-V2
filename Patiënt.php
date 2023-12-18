@@ -7,21 +7,24 @@ class Patiënt extends Afspraak
 {
     public function afspraken_overzicht($Patiënt_id)
     {
+        $afspraken = []; 
+
         try {
-            $sql =  "SELECT Afspraak_id, Gebruiker_id, Patiënt_id, Locatie_id, status, Datum, Tijd, Factuur_id, Notities FROM afspraak WHERE Patiënt_id = ?";
+            $sql =  "SELECT Afspraak_id, Gebruiker_id, Patiënt_id, Locatie_id, status, Datum, Tijd, Factuur_id FROM afspraak WHERE Patiënt_id = ?";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(1, $Patiënt_id, PDO::PARAM_INT);
             $stmt->execute();
+
             if ($stmt->errorCode() !== '00000') {
                 throw new Exception("Error executing query: " . implode(", ", $stmt->errorInfo()));
             }
 
             $afspraken = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return $afspraken;
         } catch (Exception $e) {
             echo "Error: " . $e->getMessage();
         }
+
+        return $afspraken; // Return the variable outside the try block
     }
 }
 
@@ -48,20 +51,17 @@ $appointments = $patient->afspraken_overzicht($patientId);
                 <tr>
                     <th>Datum</th>
                     <th>Tijd</th>
-                   
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($afspraken as $afspraak) : ?>
+                <?php foreach ($appointments as $afspraak) : ?>
                     <tr>
                         <td><?php echo $afspraak['Datum']; ?></td>
                         <td><?php echo $afspraak['Tijd']; ?></td>
-                    
                     </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
     </section>
 </body>
-
 </html>
