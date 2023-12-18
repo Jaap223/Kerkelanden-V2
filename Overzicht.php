@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
             <input type="date" id="dateRange" name="dateRange" required>
 
 
-            <button type="submit">Generate PDF</button>
+            <button type="submit">Overzicht afspraken</button>
         </form>
-        =
+        
         <div id="printMessage"></div>
 
     </div>

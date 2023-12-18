@@ -20,6 +20,7 @@
         <a href="OmgevingKlant.php">Omgeving klant</a>
         <a href="Behandeling.php">Behandeling inplannen</a>
         <a href="gebruiker.php">gebruiker registreren</a>
+        <a href="Patiënt.php">Afspraak overzicht</a>
     </nav>
 
 
