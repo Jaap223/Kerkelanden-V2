@@ -35,7 +35,11 @@ class Patiënt extends Afspraak
 
     
 }
+
+
+
 $patient = new Patiënt();
+// id van de gebruiker op het kerkelanden, dit is nodig zodat alleen de klant zijn huidige afspraken kan inzien.
 $patientId = 10; 
 $afspraken = $patient->afspraken_overzicht($patientId);
 
