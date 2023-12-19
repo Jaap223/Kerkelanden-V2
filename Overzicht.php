@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
     $pdf->Cell(40, 10, 'Hello World!');
     $pdf->Output();
     exit();
+    
 }
 
 ?>
