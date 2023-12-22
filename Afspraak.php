@@ -44,16 +44,37 @@ class Afspraak extends database
         return $stmt->rowCount();
     }
 
-    public function afspraak_annuleren()
+    public function afspraak_annuleren($afspraakId)
     {
-        $sql = "DELETE FROM afspraak WHERE Gebruiker_id = ? AND Patiënt_id = ? AND Datum = ? LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT);
-        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);
-        $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->rowCount();
+        try {
+            $sql = "DELETE FROM afspraak WHERE afspraak_id = ? LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $afspraakId, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
+
+    public function afspraak_annuleren($afspraakId)
+    {
+
+        try {
+            $sql = "DELETE FROM afspraak WHERE afspraak_id = ? LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $afspraakId, PDO::PARAM_INIT);
+            $stmt->connect();
+
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
+    }
+
 
     public function behandeling_toevoegen()
     {
@@ -66,12 +87,20 @@ class Afspraak extends database
         return $stmt->rowCount();
     }
 
-    public function behandeling_verwijderen($behandeling_id)
+    public function behandeling_verwijderen($afspraakId)
     {
-        $sql = "DELETE FROM behandeling WHERE behandeling_id = :behandeling_id LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(':behandeling_id', $_POST['behandeling_id']);
-        $stmt->execute();
+        if (isset($_POST['action']) && $_POST['action'] === 'behandeling_verwijderen') {
+            $afspraakId = $_POST['afspraak_id'];
+
+
+            $sql = "DELETE FROM afspraak WHERE afspraak_id = :afspraak_id LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(':afspraak_id', $afspraak_id);
+            $stmt->execute();
+
+            //header("Location: OmgevingKlant.php");
+            exit();
+        }
     }
 }
 
@@ -92,31 +121,33 @@ if ($result['Rol'] != 'assistent') {
 }
 
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     print_r($_POST);
-    $gebruikerId = $_POST["Gebruiker_id"];
-    $patientId = $_POST["Patient_id"];
-    $datum = $_POST["datum"];
-    $tijd = $_POST["tijd"];
-    $locatie = $_POST["locatie"];
-    $status = $_POST["status"];
 
-    if (empty($gebruikerId) || empty($patientId) || empty($tijd) || empty($datum) || empty($locatie) || empty($status)) {
-        echo "Vul alle velden in alstublieft";
-    } else {
-        $afspraak = new Afspraak();
-        // print_r($_POST);
-        $result = $afspraak->afspraak_maken($gebruikerId, $patientId, $tijd, $datum, $locatie, $status);
+    $afspraak = new Afspraak();
 
-        if ($result > 0) {
-            echo "Afspraak gemaakt op $datum";
+    if ($_POST['action'] == 'delete') {
+        $afspraakId = $_POST['afspraak_id'];
+        if (!empty($afspraakId)) {
+            $result = $afspraak->afspraak_annuleren($afspraakId);
+            echo $result > 0 ? "Afspraak met ID $afspraakId is geannuleerd" : "Er ging iets fout met het annuleren van de afspraak";
         } else {
-            echo "Er ging iets fout met het afspraak maken";
+            echo "Ongeldige aanvraag voor annulering";
+        }
+    } else {
+        $fields = ['Gebruiker_id', 'Patient_id', 'datum', 'tijd', 'locatie', 'status'];
+        $values = array_map(fn ($field) => $_POST[$field] ?? null, $fields);
+
+        if (in_array(null, $values, true)) {
+            echo "Vul alle velden in alstublieft";
+        } else {
+            $result = $afspraak->afspraak_maken(...$values);
+            echo $result > 0 ? "Afspraak gemaakt op {$_POST['datum']}" : "Er ging iets fout met het afspraak maken";
         }
     }
 }
+
+
 ?>
 
 
@@ -155,6 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" name="status" required>
 
             <button type="submit" name="afspraak_maken">Maak Afspraak</button>
+        </form>
         </form>
     </section>
 </body>

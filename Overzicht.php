@@ -16,18 +16,54 @@ $stmt->execute();
 
 $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
-  
+    $selectedDate = $_POST['dateRange'];
+
+    
+    $data = fetchDataForPDF($selectedDate);
+
+   
+    generatePDF($data);
+
+    exit();
+}
+
+function fetchDataForPDF($selectedDate) {
+
+    $data = [
+        ['Name' => 'John Doe', 'AppointmentDate' => '2023-01-01', 'OtherField' => 'Value'],
+        ['Name' => 'Jane Smith', 'AppointmentDate' => '2023-01-02', 'OtherField' => 'Another Value'],
+       
+    ];
+
+    return $data;
+}
+
+function generatePDF($data) {
     $pdf = new FPDF();
     $pdf->AddPage();
     $pdf->SetFont('Arial', 'B', 16);
-    $pdf->Cell(40, 10, 'Hello World!');
-    $pdf->Output();
-    exit();
-    
-}
+    $pdf->Cell(40, 10, 'Appointment Overview');
 
+
+    $pdf->Ln(10);
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->Cell(40, 10, 'Name', 1);
+    $pdf->Cell(40, 10, 'Appointment Date', 1);
+    $pdf->Cell(40, 10, 'Other Field', 1);
+
+  
+    $pdf->Ln();
+    $pdf->SetFont('Arial', '', 12);
+    foreach ($data as $row) {
+        $pdf->Cell(40, 10, $row['Name'], 1);
+        $pdf->Cell(40, 10, $row['AppointmentDate'], 1);
+        $pdf->Cell(40, 10, $row['OtherField'], 1);
+        $pdf->Ln();
+    }
+
+    $pdf->Output();
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,10 +87,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
             <label for="dateRange">Select Date Range:</label>
             <input type="date" id="dateRange" name="dateRange" required>
 
-
             <button type="submit">Overzicht afspraken</button>
         </form>
-        
+
         <div id="printMessage"></div>
 
     </div>
