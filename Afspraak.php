@@ -34,15 +34,25 @@ class Afspraak extends database
 
     public function afspraak_wijzigen()
     {
-        $sql = "UPDATE afspraak SET Gebruiker_id = ?, Patiënt_id = ?, Datum = ? WHERE behandeling_id = ? LIMIT 1";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT);
-        $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);
-        $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
-        $stmt->bindParam(4, $_POST['behandeling_id'], PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->rowCount();
+        try {
+            $sql = "UPDATE afspraak SET Gebruiker_id = ?, Patiënt_id = ?, Datum = ?, Tijd = ?, Locatie_id = ?, Status = ? WHERE afspraak_id = ? LIMIT 1";
+            $stmt = $this->connect()->prepare($sql);
+            $stmt->bindParam(1, $_POST['Gebruiker_id'], PDO::PARAM_INT);
+            $stmt->bindParam(2, $_POST['Patiënt_id'], PDO::PARAM_INT);
+            $stmt->bindParam(3, $_POST['datum'], PDO::PARAM_STR);
+            $stmt->bindParam(4, $_POST['tijd'], PDO::PARAM_STR);
+            $stmt->bindParam(5, $_POST['locatie'], PDO::PARAM_STR);
+            $stmt->bindParam(6, $_POST['status'], PDO::PARAM_STR);
+            $stmt->bindParam(7, $_POST['afspraak_id'], PDO::PARAM_INT); // Assuming 'afspraak_id' is the primary key
+    
+            $stmt->execute();
+            return $stmt->rowCount();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            return false;
+        }
     }
+    
 
     public function afspraak_annuleren($afspraakId)
     {
@@ -59,21 +69,7 @@ class Afspraak extends database
         }
     }
 
-    public function afspraak_annuleren($afspraakId)
-    {
 
-        try {
-            $sql = "DELETE FROM afspraak WHERE afspraak_id = ? LIMIT 1";
-            $stmt = $this->connect()->prepare($sql);
-            $stmt->bindParam(1, $afspraakId, PDO::PARAM_INIT);
-            $stmt->connect();
-
-            return $stmt->rowCount();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-            return false;
-        }
-    }
 
 
     public function behandeling_toevoegen()
@@ -187,8 +183,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <button type="submit" name="afspraak_maken">Maak Afspraak</button>
         </form>
-        </form>
     </section>
+
+
+    <?php if (isset($resultaat)) : ?>
+        <p><?php echo $resultaat; ?></p>
+    <?php endif; ?>
+    <?php
+    $afspraken = $afspraak->afspraak_wijzigen();
+
+    ?>
+<section class="formR">
+    <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+        <h1>Afspraak Wijzigen</h1>
+
+        <label for="afspraak_id">Selecteer afspraak voor update:</label>
+        <select name="afspraak_id" required>
+            <?php foreach ($afspraken as $afspraak) : ?>
+                <option value="<?= $afspraak['afspraak_id'] ?>"><?= $afspraak['afspraak_id'] ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <input type="hidden" name="action" value="update">
+        <label for="gebruiker">Gebruiker</label>
+        <input type="text" name="Gebruiker_id">
+
+        <label for="patient">Patiënt</label>
+        <input type="text" name="Patient_id">
+
+        <label for="tijd">Tijd</label>
+        <input type="time" name="tijd" required>
+
+        <label for="datum">Datum</label>
+        <input type="date" name="datum" required>
+
+        <label for="locatie">Locatie</label>
+        <input type="text" name="locatie" required>
+
+        <label for="status">Status</label>
+        <input type="text" name="status" required>
+
+        <button type="submit" name="update">Update Afspraak</button>
+    </form>
+</section>
+
 </body>
 
 </html>
