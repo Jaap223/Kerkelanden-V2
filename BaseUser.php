@@ -87,10 +87,6 @@ if (isset($_POST['inloggen'])) {
     <title>head</title>
 </head>
 
-
-
-
-
 <body>
 
 
