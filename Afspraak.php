@@ -43,7 +43,7 @@ class Afspraak extends database
             $stmt->bindParam(4, $_POST['tijd'], PDO::PARAM_STR);
             $stmt->bindParam(5, $_POST['locatie'], PDO::PARAM_STR);
             $stmt->bindParam(6, $_POST['status'], PDO::PARAM_STR);
-            $stmt->bindParam(7, $_POST['afspraak_id'], PDO::PARAM_INT); // Assuming 'afspraak_id' is the primary key
+            $stmt->bindParam(7, $_POST['afspraak_id'], PDO::PARAM_INT); 
     
             $stmt->execute();
             return $stmt->rowCount();
