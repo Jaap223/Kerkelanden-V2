@@ -3,7 +3,10 @@ session_start();
 
 require_once 'Database.php';
 require_once 'head/header.php';
+
 // require_once 'Gebruiker.php';
+
+
 class BaseUser extends Database
 {
     private $db;
@@ -12,7 +15,6 @@ class BaseUser extends Database
     {
         $this->db = new Database();
     }
-
 
     public function inloggen($user_name, $wachtwoord)
     {
@@ -52,8 +54,6 @@ class BaseUser extends Database
 
             unset($_SESSION['inloggen']);
             unset($_SESSION[['user_name']]);
-
-
             session_destroy();
 
             header('Location: BaseUser.php');
@@ -88,8 +88,6 @@ if (isset($_POST['inloggen'])) {
 </head>
 
 <body>
-
-
     <main>
         <label>Inloggen</label>
         <section class="formR">

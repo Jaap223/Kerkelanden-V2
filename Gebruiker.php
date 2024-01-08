@@ -37,6 +37,7 @@ class Gebruiker extends Database
         } catch (Exception $e) {
             return $e->getMessage();
         }
+        
 
         return $message;
     }
@@ -82,11 +83,6 @@ if (isset($_POST['klant_registreren'])) {
         echo '<p class="success-message">' . $message . '</p>';
     }
 }
-
-
-
-
-
 
 
 ?>

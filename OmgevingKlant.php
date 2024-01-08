@@ -25,10 +25,6 @@ $overzicht = new Behandeling();
 $behandelingen = $overzicht->bekijken();
 
 
-
-
-
-
 class omgevingKlant extends Database{
 
 

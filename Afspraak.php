@@ -72,6 +72,22 @@ class Afspraak extends Database
         }
     }
 
+    // public function afspraak_annuleren($afspraakId)
+    // {
+    //     try {
+    //         $sql = "DELETE FROM afspraak WHERE afspraak_id = ? LIMIT 1";
+    //         $stmt =  $this->connect()->prepare($sql);
+    //         $stmt->bindParam(1, $afspraakId, PDO::PARAM_INT);
+    //         $stmt->execute();
+
+    //         return $stmt->rowCount();
+
+    //     }catch (PDOException $e) {
+    //         echo "Error: " . $e->getMessage();
+    //         return false;
+        
+    // }
+
     public function behandeling_toevoegen()
     {
         try {
