@@ -9,60 +9,66 @@ $user_name = $_SESSION['user_name'];
 $conn = new PDO("mysql:host=localhost;dbname=kerkelanden", "root", "");
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$sql = "SELECT * FROM gebruiker WHERE user_name = :user_name";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':user_name', $user_name);
-$stmt->execute();
-
-$result = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
     $selectedDate = $_POST['dateRange'];
-
-    
-    $data = fetchDataForPDF($selectedDate);
-
-   
+    $data = fetchDataForPDF($user_name, $selectedDate, $conn);
     generatePDF($data);
-
     exit();
 }
 
-function fetchDataForPDF($selectedDate) {
+function fetchDataForPDF($user_name, $selectedDate, $conn)
+{
+    try {
+        
+        $sql = "SELECT Naam, `Afspraak datum`, kosten FROM Afspraak 
+                WHERE Gebruiker_id = (SELECT Gebruiker_id FROM Gebruiker WHERE user_name = :user_name)
+                AND Datum = :selectedDate";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':user_name', $user_name);
+        $stmt->bindParam(':selectedDate', $selectedDate);
+        $stmt->execute();
 
-    $data = [
-        ['Name' => 'John Doe', 'AppointmentDate' => '2023-01-01', 'OtherField' => 'Value'],
-        ['Name' => 'Jane Smith', 'AppointmentDate' => '2023-01-02', 'OtherField' => 'Another Value'],
-       
-    ];
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $data;
+        if ($userData) {
+            $data = [
+                ['Naam' => $userData['Naam'], 'Afspraak datum' => $userData['Afspraak datum'], 'kosten' => $userData['kosten']],
+            ];
+            return $data;
+        } else {
+            return [];
+        }
+    } catch (Exception $e) {
+      
+        return [];
+    }
 }
-
-function generatePDF($data) {
+function generatePDF($data)
+{
+    ob_start();
     $pdf = new FPDF();
     $pdf->AddPage();
     $pdf->SetFont('Arial', 'B', 16);
-    $pdf->Cell(40, 10, 'Appointment Overview');
-
+    $pdf->Cell(40, 10, 'Afspraak & behandelingen overzicht');
 
     $pdf->Ln(10);
     $pdf->SetFont('Arial', 'B', 12);
-    $pdf->Cell(40, 10, 'Name', 1);
-    $pdf->Cell(40, 10, 'Appointment Date', 1);
-    $pdf->Cell(40, 10, 'Other Field', 1);
+    $pdf->Cell(40, 10, 'Naam', 1);
+    $pdf->Cell(40, 10, 'Afspraak datum', 1);
+    $pdf->Cell(40, 10, 'kosten', 1);
 
-  
     $pdf->Ln();
     $pdf->SetFont('Arial', '', 12);
     foreach ($data as $row) {
-        $pdf->Cell(40, 10, $row['Name'], 1);
-        $pdf->Cell(40, 10, $row['AppointmentDate'], 1);
-        $pdf->Cell(40, 10, $row['OtherField'], 1);
+        $pdf->Cell(40, 10, $row['Naam'], 1);
+        $pdf->Cell(40, 10, $row['Afspraak datum'], 1);
+        $pdf->Cell(40, 10, $row['kosten'], 1);
         $pdf->Ln();
     }
 
     $pdf->Output();
+    ob_end_flush();
 }
 ?>
 
@@ -74,26 +80,23 @@ function generatePDF($data) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <title>Overzicht Behandeling</title>
+    <title>head</title>
 </head>
 
 <body>
-
     <div class="formR">
-        <h1>Overzicht Printen</h1>
-
+        <h1>Factuur Bekijken</h1>
         <form action="" method="post">
-
             <label for="dateRange">Select Date Range:</label>
             <input type="date" id="dateRange" name="dateRange" required>
-
             <button type="submit">Overzicht afspraken</button>
         </form>
+        <div id="printMessage">
 
-        <div id="printMessage"></div>
 
+
+        </div>
     </div>
-
 </body>
 
 </html>

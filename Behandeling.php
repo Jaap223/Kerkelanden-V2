@@ -29,8 +29,6 @@ class behandeling extends database
             return $e->getMessage();
         }
 
-
-
         return $message;
     }
 
@@ -73,13 +71,10 @@ class behandeling extends database
     }
 
 
-
     public function delete($behandeling_id)
     {
         if (isset($_POST['action']) && $_POST['action'] === 'delete') {
             $behandeling_id = $_POST['behandeling_id'];
-
-
             $sql = "DELETE FROM behandeling WHERE Behandeling_id = :behandeling_id LIMIT 1";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(':behandeling_id', $behandeling_id);
@@ -103,6 +98,8 @@ class behandeling extends database
             return false;
         }
     }
+
+
 }
 
 $user_name = $_SESSION['user_name'];
