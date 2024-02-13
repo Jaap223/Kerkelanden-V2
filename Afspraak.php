@@ -37,6 +37,7 @@ class Afspraak extends Database
             if ($updateData) {
                 $sql = "UPDATE afspraak SET Gebruiker_id = ?, Patiënt_id = ?, Datum = ?, Tijd = ?, Locatie_id = ?, Status = ? WHERE afspraak_id = ? LIMIT 1";
                 $stmt = $this->connect()->prepare($sql);
+                
                 $stmt->bindParam(1, $updateData['Gebruiker_id'], PDO::PARAM_INT);
                 $stmt->bindParam(2, $updateData['Patiënt_id'], PDO::PARAM_INT);
                 $stmt->bindParam(3, $updateData['datum'], PDO::PARAM_STR);
@@ -44,12 +45,16 @@ class Afspraak extends Database
                 $stmt->bindParam(5, $updateData['locatie'], PDO::PARAM_STR);
                 $stmt->bindParam(6, $updateData['status'], PDO::PARAM_STR);
                 $stmt->bindParam(7, $updateData['afspraak_id'], PDO::PARAM_INT);
+
                 $stmt->execute();
                 return $stmt->rowCount();
+
             } else {
+
                 $sql = "SELECT afspraak_id FROM afspraak";
                 $stmt = $this->connect()->query($sql);
                 return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
             }
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
@@ -72,21 +77,6 @@ class Afspraak extends Database
         }
     }
 
-    // public function afspraak_annuleren($afspraakId)
-    // {
-    //     try {
-    //         $sql = "DELETE FROM afspraak WHERE afspraak_id = ? LIMIT 1";
-    //         $stmt =  $this->connect()->prepare($sql);
-    //         $stmt->bindParam(1, $afspraakId, PDO::PARAM_INT);
-    //         $stmt->execute();
-
-    //         return $stmt->rowCount();
-
-    //     }catch (PDOException $e) {
-    //         echo "Error: " . $e->getMessage();
-    //         return false;
-        
-    // }
 
     public function behandeling_toevoegen()
     {
@@ -139,13 +129,13 @@ if ($result['Rol'] != 'assistent') {
     header("location: BaseUser.php");
     exit();
 }
+
+
 $afspraak = new Afspraak();
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    print_r($_POST);
+    //print_r($_POST);
 
-  
-
-    if ($_POST['action'] == 'delete') {
+    if (isset($_POST['action']) && $_POST['action'] == 'delete') {
         $afspraakId = $_POST['afspraak_id'];
         if (!empty($afspraakId)) {
             $result = $afspraak->afspraak_annuleren($afspraakId);
@@ -183,27 +173,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <section class="formR">
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <h1>A
-            <h1>Afspraak Maken</h1>
+                <h1>Afspraak Maken</h1>
 
-            <label for="gebruiker">Gebruiker</label>
-            <input type="text" name="Gebruiker_id">
+                <label for="gebruiker">Gebruiker</label>
+                <input type="text" name="Gebruiker_id">
 
-            <label for="patient">Patiënt</label>
-            <input type="text" name="Patient_id">
+                <label for="patient">Patiënt</label>
+                <input type="text" name="Patient_id">
 
-            <label for="tijd">Tijd</label>
-            <input type="time" name="tijd" required>
+                <label for="tijd">Tijd</label>
+                <input type="time" name="tijd" required>
 
-            <label for="datum">Datum</label>
-            <input type="date" name="datum" required>
+                <label for="datum">Datum</label>
+                <input type="date" name="datum" required>
 
-            <label for="locatie">Locatie</label>
-            <input type="text" name="locatie" required>
+                <label for="locatie">Locatie</label>
+                <input type="text" name="locatie" required>
 
-            <label for="status">Status</label>
-            <input type="text" name="status" required>
+                <label for="status">Status</label>
+                <input type="text" name="status" required>
 
-            <button type="submit" name="afspraak_maken">Maak Afspraak</button>
+                <button type="submit" name="afspraak_maken">Maak Afspraak</button>
         </form>
     </section>
 
@@ -245,7 +235,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label for="status">Status</label>
             <input type="text" name="status" required>
 
-            <button type="submit" name="update">Update Afspraak</button>
+            <button type="submit" name="action" value="update">Update Afspraak</button>
         </form>
     </section>
 

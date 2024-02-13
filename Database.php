@@ -4,6 +4,7 @@ class Database {
 
     protected $conn;
 
+
     public function connect()
     {
         try {

@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     exit();
 }
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
     $behandeling = new Behandeling();
     $behandeling_beschrijving = $_POST['behandeling_beschrijving'];
@@ -25,7 +26,9 @@ $overzicht = new Behandeling();
 $behandelingen = $overzicht->bekijken();
 
 
-class omgevingKlant extends Database{
+class omgevingKlant extends Database
+{
+
 
 
 

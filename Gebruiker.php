@@ -7,9 +7,12 @@ class Gebruiker extends Database
 {
     public function gebruiker_toevoegen()
     {
+         
         
     }
 
+
+    //deze functie zorgt ervoor dat een assistent een klant kan registreren 
     public function klant_registreren($naam, $adres, $wachtwoord, $geboortedatum, $tel_nr, $rol, $user_name)
     {
 
@@ -47,7 +50,7 @@ class Gebruiker extends Database
         $sql = "SELECT * FROM gebruiker WHERE afspraak_datum BETWEEN :startDatum";
         $stmt = $this->connect()->prepare($sql);
         $stmt->bindParam(':startDatum', $startDatum);
-        //$stmt->bindParam(':eindDatum', $eindDatum);
+        $stmt->bindParam(':eindDatum', $eindDatum);
         $stmt->execute();
         return $stmt;
     }

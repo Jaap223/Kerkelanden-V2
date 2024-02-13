@@ -6,8 +6,7 @@ require_once 'Afspraak.php';
 class Patiënt extends Afspraak
 {
 
-  
-
+    //Toont overzicht van afspraken die in de database zijn geregistreerd 
     public function afspraken_overzicht($Patiënt_id)
     {
         $afspraken = []; 
@@ -23,7 +22,7 @@ class Patiënt extends Afspraak
             }
     
             $afspraken = $stmt->fetchAll(PDO::FETCH_ASSOC);
-           // var_dump($afspraken);
+        
         } catch (Exception $e) {
             error_log("Error executing query: " . $e->getMessage());
         }
@@ -31,19 +30,12 @@ class Patiënt extends Afspraak
         return $afspraken; 
     }
     
-
-
-    
 }
-
-
 
 $patient = new Patiënt();
 // id van de gebruiker op het kerkelanden, dit is nodig zodat alleen de klant zijn huidige afspraken kan inzien.
 $patientId = 10; 
 $afspraken = $patient->afspraken_overzicht($patientId);
-
-
 
 ?>
 <!DOCTYPE html>
@@ -73,6 +65,7 @@ $afspraken = $patient->afspraken_overzicht($patientId);
                     </tr>
                 </thead>
                 <tbody>
+                <!--Toont afspraken en geeft de mogelijkheid om dit te updaten of te verwijderen-->
                     <?php foreach ($afspraken as $afspraak) : ?>
                         <tr>
                             <td><?= $afspraak['Afspraak_id'] ?></td>
@@ -80,6 +73,7 @@ $afspraken = $patient->afspraken_overzicht($patientId);
                             <td><?= date('d-m-Y', strtotime($afspraak['Datum'])) ?></td>
                             <td><?= $afspraak['Tijd'] ? date('H:i', strtotime($afspraak['Tijd'])) : '' ?></td>
                             <td>
+                             
                                 <form method="POST" action="">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="afspraak_id" value="<?= $afspraak['Afspraak_id'] ?>">

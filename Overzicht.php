@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['dateRange'])) {
     exit();
 }
 
+// Haal de data van de gebruiker op die momenteel is ingelogd op de applicatie
 function fetchDataForPDF($user_name, $selectedDate, $conn)
 {
     try {
@@ -44,6 +45,7 @@ function fetchDataForPDF($user_name, $selectedDate, $conn)
         return [];
     }
 }
+// genereert een PDF op basis van de naam, afspraak, datum en kosten 
 function generatePDF($data)
 {
     ob_start();
@@ -89,11 +91,9 @@ function generatePDF($data)
         <form action="" method="post">
             <label for="dateRange">Select Date Range:</label>
             <input type="date" id="dateRange" name="dateRange" required>
-            <button type="submit">Overzicht afspraken</button>
+            <button type="submit">Factuur printen</button>
         </form>
         <div id="printMessage">
-
-
 
         </div>
     </div>

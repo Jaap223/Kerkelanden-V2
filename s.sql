@@ -4,7 +4,6 @@ CREATE TABLE Locatie (
     Tel_nr INT
 );
 
- 
 CREATE TABLE Gebruiker (
     Gebruiker_id INT PRIMARY KEY AUTO_INCREMENT,
     Naam VARCHAR(255),
@@ -15,7 +14,7 @@ CREATE TABLE Gebruiker (
     Rol VARCHAR(255),
     user_name VARCHAR(255)  
 );
- 
+
 CREATE TABLE Patiënt (
     Patiënt_id INT PRIMARY KEY AUTO_INCREMENT,
     Naam VARCHAR(255),
@@ -53,7 +52,7 @@ CREATE TABLE Factuur (
     Afspraak_id INT,
     FOREIGN KEY (Afspraak_id) REFERENCES Afspraak(Afspraak_id)
 );
- 
+
 CREATE TABLE Afspraak_Behandeling (
     Afspraak_behandeling_id INT PRIMARY KEY AUTO_INCREMENT,
     Afspraak_id INT,
@@ -61,3 +60,5 @@ CREATE TABLE Afspraak_Behandeling (
     FOREIGN KEY (Afspraak_id) REFERENCES Afspraak(Afspraak_id),
     FOREIGN KEY (Behandeling_id) REFERENCES Behandeling(Behandeling_id)
 );
+
+

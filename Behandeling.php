@@ -8,6 +8,7 @@ require_once 'Database.php';
 
 class behandeling extends database
 {
+    //Functie voor het invoeren van de een behandeling, indien er iets niet is ingevuld toont de functie een error.
     public function invoeren()
     {
         $message = "";
@@ -32,6 +33,8 @@ class behandeling extends database
         return $message;
     }
 
+
+    //function update checkt de behandelings beschrijving en checkt of de ingevoerde kosten wel een nummer is aan de hand van de is_numeric.vervolgens wordt dit geupdat
     public function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
